@@ -1,0 +1,6 @@
+{
+  "name": "Website Forge Pro",
+  "description": "Una plataforma premium para crear, depurar y exportar páginas de aterrizaje de alta conversión para pequeños negocios y freelancers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
