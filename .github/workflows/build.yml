@@ -1,0 +1,50 @@
+name: CI and Deployable Build Artifacts
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Package Production Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-size: 'large'
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          npm ci || npm install
+
+      - name: Lint Application
+        run: |
+          npm run lint --if-present
+
+      - name: Compile and Bundle Production App
+        run: |
+          npm run build
+
+      - name: Package Debug and Production Files
+        run: |
+          echo "Packaging build artifacts..."
+          # Creates a brief readme instruction file inside the bundle
+          echo -e "Website Forge Pro Production Build\n===================================\n\nTo run this build locally:\n1. Ensure Node.js (v18+) is installed.\n2. Run: npm install\n3. Run: npm start" > dist/README_START.txt
+
+      - name: Upload Debug Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Website-Forge-Pro-Production-Build
+          path: dist/
+          retention-days: 7
+          compression-level: 9
